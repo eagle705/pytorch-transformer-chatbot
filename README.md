@@ -87,7 +87,7 @@ pred_str:  너무 걱정하지 마세요.
 
 ### Requirements
 
-```
+```bash
 pip install mxnet
 pip install gluonnlp
 pip install konlpy
