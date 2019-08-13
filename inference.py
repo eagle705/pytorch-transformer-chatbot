@@ -1,34 +1,21 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 import argparse
-import pickle
 import sys
-import os
 import numpy as np
 from pathlib import Path
 
-
-from tqdm import tqdm
-import random
 import json
 from konlpy.tag import Mecab
 
 import torch
-from torch.utils.tensorboard import SummaryWriter
-from torch import nn, optim
-from torch.optim.lr_scheduler import ReduceLROnPlateau
-from torch.utils.data import DataLoader
-
-from evaluate import evaluate, decoding_from_result
-from metric import acc
+from evaluate import decoding_from_result
 from model.net import Transformer
 
 from data_utils.utils import Config, CheckpointManager, SummaryManager
-from data_utils.chatbot_dataset import ChatbotDataset
 from data_utils.vocab_tokenizer import Tokenizer, Vocabulary, keras_pad_fn, mecab_token_pos_flat_fn
 
 np.set_printoptions(suppress=False)
 np.set_printoptions(threshold=sys.maxsize)
-
 
 
 def main(parser):
@@ -60,14 +47,13 @@ def main(parser):
 
     while(True):
         input_text = input("문장을 입력하세요: ")
-
         enc_input = torch.tensor(tokenizer.list_of_string_to_arr_of_pad_token_ids([input_text]))
         dec_input = torch.tensor([[vocab.token2idx[vocab.START_TOKEN]]])
 
         for i in range(model_config.maxlen):
             y_pred = model(enc_input.to(device), dec_input.to(device))
             y_pred_ids = y_pred.max(dim=-1)[1]
-            if y_pred_ids[0,-1] == vocab.token2idx[vocab.END_TOKEN]:
+            if (y_pred_ids[0,-1] == vocab.token2idx[vocab.END_TOKEN]).to(torch.device('cpu')).numpy():
                 decoding_from_result(enc_input=enc_input, y_pred=y_pred, tokenizer=tokenizer)
                 break
 

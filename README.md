@@ -85,6 +85,15 @@ pred:  [['너무/MAG', '걱정/NNG', '하/XSV', '지/EC', '마세요/VX+EP+EF', 
 pred_str:  너무 걱정하지 마세요.
 ```
 
+### 실행순서
+- 테스트만 할경우 ```inference.py```만 실행
+
+```bash
+python build_vocab.py # 사전 구축
+python train.py # 학습
+python inference.py # 테스트
+```
+
 ### Requirements
 
 ```bash

@@ -36,7 +36,7 @@ class CheckpointManager:
         torch.save(state, self._model_dir / filename)
 
     def load_checkpoint(self, filename):
-        state = torch.load(self._model_dir / filename)
+        state = torch.load(self._model_dir / filename, map_location=torch.device('cpu'))
         return state
 
 

@@ -14,13 +14,13 @@ device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cp
 
 class Transformer(nn.Module):
     def __init__(self, config: Config, vocab: Vocabulary) -> None:
-        """Instantiating CharCNN class
+        """Instantiating Transformer class
         Args:
-            embedding_dim (int): the dimension of embedding vector for token
-            vocab (model.utils.Vocab): the instance of model.utils.Vocab
+            config (Config): model config, the instance of data_utils.utils.Config
+            vocab (Vocabulary): the instance of data_utils.vocab_tokenizer.Vocabulary
         """
         super(Transformer, self).__init__()
-
+        self.vocab = vocab
         d_model = config.d_model #512
         n_head = config.n_head #8
         num_encoder_layers = config.num_encoder_layers #6
@@ -46,8 +46,8 @@ class Transformer(nn.Module):
         x_dec_embed = self.input_embedding(dec_input.long())
 
         # Masking
-        src_key_padding_mask = enc_input == 0 # tensor([[False, False, False,  True,  ...,  True]])
-        tgt_key_padding_mask = dec_input == 0
+        src_key_padding_mask = enc_input == self.vocab.PAD_ID # tensor([[False, False, False,  True,  ...,  True]])
+        tgt_key_padding_mask = dec_input == self.vocab.PAD_ID
         memory_key_padding_mask = src_key_padding_mask
         tgt_mask = self.transfomrer.generate_square_subsequent_mask(dec_input.size(1))
 
