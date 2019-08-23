@@ -1,6 +1,6 @@
 # PyTorch_Transformer_Chatbot
 
-Simple Korean Generative Chatbot Implemetation based on new PyTorch Transformer API (PyTorch v1.2 / Python 3.x)
+Simple Korean Generative Chatbot Implementation based on new PyTorch Transformer API (PyTorch v1.2 / Python 3.x)
 
 ![transformer_fig](./assets/transformer_fig.png)
 
@@ -22,8 +22,8 @@ def forward(self, enc_input: torch.Tensor, dec_input: torch.Tensor) -> torch.Ten
     x_dec_embed = self.input_embedding(dec_input.long())
 
     # Masking
-    src_key_padding_mask = enc_input == 0 # tensor([[False, False, False,  True,  ...,  True]])
-    tgt_key_padding_mask = dec_input == 0
+    src_key_padding_mask = enc_input == self.vocab.PAD_ID # tensor([[False, False, False,  True,  ...,  True]])
+    tgt_key_padding_mask = dec_input == self.vocab.PAD_ID
     memory_key_padding_mask = src_key_padding_mask
     tgt_mask = self.transfomrer.generate_square_subsequent_mask(dec_input.size(1))
 
